@@ -19,6 +19,27 @@ router.post('/email', async (req, res) => {
   res.json({ ok: true });
 });
 
+// Computer Order on each pay by counting existing payments this week
+router.post('/email', async (req, res) => {
+    let orderNum = null;
+    if (req.body.choice === 'pay') {
+      // Count prior pays for this user/week
+      const count = await EmailRecord.countDocuments({
+        user: req.body.user,
+        week: req.body.week,
+        choice: 'pay'
+      });
+      orderNum = count + 1;
+    }
+  
+    const rec = new EmailRecord({
+      ...req.body,
+      order: orderNum
+    });
+    await rec.save();
+    res.json({ ok: true });
+  });
+
 // 3. Record questionnaire
 router.post('/response', async (req, res) => {
   const resp = await Response.findOne({ user: req.body.user, week: req.body.week, emailIndex: req.body.emailIndex });
