@@ -15,7 +15,7 @@ router.post('/user', async (req, res) => {
 // 2. Record email choice
 router.post('/email', async (req, res) => {
   // ... previous order logic ...
-  const rec = new EmailRecord({ ...req.body, order });
+  const rec = new EmailRecord({ ...req.body, order: req.body.emailIndex });
   await rec.save();
   res.json({ ok: true });
 });
