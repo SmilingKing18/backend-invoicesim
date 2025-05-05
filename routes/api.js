@@ -4,6 +4,7 @@ const User = require('../models/User');
 const EmailRecord = require('../models/EmailRecord');
 const Response = require('../models/Response');
 const { exportAll } = require('../utils/export');
+const FinalResponse = require('../models/FinalResponse');
 
 // 1. Create user + demographics
 router.post('/user', async (req, res) => {
@@ -59,7 +60,27 @@ router.post('/final', async (req, res) => {
   res.json({ ok: true });
 });
 
-// 5. Export all data
+// 5. Persist the final questionnaire + awards
+router.post('/final', async (req, res, next) => {
+  try {
+    const { user, sessionId, final: data, awards } = req.body;
+    const rec = new FinalResponse({
+      user,
+      sessionId,
+      countdownText: data.countdownText,
+      q1:            data.q1,
+      q2:            data.q2,
+      q3:            data.q3,
+      awards
+    });
+    await rec.save();
+    res.json(rec);
+  } catch(err) {
+    next(err);
+  }
+});
+
+// 6. Export all data
 router.get('/export', exportAll);
 
 router.get('/user/:userId/data', async (req, res, next) => {
