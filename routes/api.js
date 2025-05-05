@@ -62,8 +62,11 @@ router.post('/final', async (req, res) => {
 
 // 5. Persist the final questionnaire + awards
 router.post('/final', async (req, res, next) => {
+  console.log('🔔 /api/final called with body:', req.body);
   try {
     const { user, sessionId, final: data, awards } = req.body;
+    console.log('Parsed final data:', data, 'awards:', awards);
+
     const rec = new FinalResponse({
       user,
       sessionId,
@@ -74,8 +77,10 @@ router.post('/final', async (req, res, next) => {
       awards
     });
     await rec.save();
+    console.log('🗄️ FinalResponse saved:', rec._id);
     res.json(rec);
-  } catch(err) {
+  } catch (err) {
+    console.error('❌ Error in /api/final:', err);
     next(err);
   }
 });
