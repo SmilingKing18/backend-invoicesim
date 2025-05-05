@@ -91,9 +91,13 @@ router.get('/export', exportAll);
 router.get('/user/:userId/data', async (req, res, next) => {
   try {
     const userId = req.params.userId;
-    const emailRecords = await EmailRecord.find({ user: userId });
-    const responses    = await Response.find({ user: userId });
-    res.json({ emailRecords, responses });
+    const [ emailRecords, responses, finalResponses ] = await Promise.all([
+          EmailRecord.find({    user: userId }),
+          Response.find({       user: userId }),
+          FinalResponse.find({  user: userId })
+        ]);
+        // now return everything together
+        res.json({ emailRecords, responses, finalResponses });
   } catch (err) {
     next(err);
   }
