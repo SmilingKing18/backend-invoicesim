@@ -1,0 +1,16 @@
+// src/models/FinalResponse.js
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
+const FinalResponseSchema = new Schema({
+  user:          { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  sessionId:     { type: String },
+  countdownText: { type: String },
+  q1:            { type: String },
+  q2:            { type: String },
+  q3:            { type: String },
+  awards:        { type: Map, of: Boolean },
+  createdAt:     { type: Date, default: Date.now }
+});
+
+module.exports = mongoose.model('FinalResponse', FinalResponseSchema);
