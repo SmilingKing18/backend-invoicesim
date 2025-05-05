@@ -9,7 +9,7 @@ const FinalResponseSchema = new Schema({
   q1:            { type: String },
   q2:            { type: String },
   q3:            { type: String },
-  awards:        { type: Map, of: Boolean },
+  awards:        { type: String },
   createdAt:     { type: Date, default: Date.now }
 });
 
