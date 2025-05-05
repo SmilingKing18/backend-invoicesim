@@ -14,7 +14,8 @@ router.post('/user', async (req, res) => {
 
 // 2. Record email choice
 router.post('/email', async (req, res) => {
-  const rec = new EmailRecord(req.body);
+  // ... previous order logic ...
+  const rec = new EmailRecord({ ...req.body, order });
   await rec.save();
   res.json({ ok: true });
 });
@@ -42,28 +43,19 @@ router.post('/email', async (req, res) => {
 
 // 3. Record questionnaire
 router.post('/response', async (req, res) => {
-  const resp = await Response.findOne({ user: req.body.user, week: req.body.week, emailIndex: req.body.emailIndex });
-  if (resp) {
-    // update questions
-    resp.questions = req.body.questions;
-    await resp.save();
-  } else {
-    const newResp = new Response(req.body);
-    await newResp.save();
-  }
+  await Response.findOneAndUpdate(
+    { user: req.body.user, week: req.body.week, emailIndex: req.body.emailIndex },
+    { ...req.body, sessionId: req.body.sessionId },
+    { upsert: true }
+  );
   res.json({ ok: true });
 });
 
 // 4. Final questionnaire
 router.post('/final', async (req, res) => {
-  const resp = await Response.findOne({ user: req.body.user, week: 'final' });
-  if (resp) {
-    resp.final = req.body.final;
-    await resp.save();
-  } else {
-    const newFinal = new Response({ user: req.body.user, week: 'final', final: req.body.final });
-    await newFinal.save();
-  }
+  const filter = { user: req.body.user, week: 'final' };
+  const update = { final: req.body.final, sessionId: req.body.sessionId };
+  await Response.findOneAndUpdate(filter, update, { upsert: true });
   res.json({ ok: true });
 });
 

@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const EmailRecordSchema = new mongoose.Schema({
   user:            { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  sessionID:       String,
   week:            Number,
   emailIndex:      Number,
   behaviorType:    String,
@@ -12,6 +13,8 @@ const EmailRecordSchema = new mongoose.Schema({
   emailText:       String,
   companyLogo:     String,
   companyAddress:  String,
+  displayedAt:     Date,
+  responseTime:    Number,
 });
 
 module.exports = mongoose.model('EmailRecord', EmailRecordSchema);
