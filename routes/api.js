@@ -62,4 +62,15 @@ router.post('/final', async (req, res) => {
 // 5. Export all data
 router.get('/export', exportAll);
 
+router.get('/user/:userId/data', async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const emailRecords = await EmailRecord.find({ user: userId });
+    const responses    = await Response.find({ user: userId });
+    res.json({ emailRecords, responses });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;
