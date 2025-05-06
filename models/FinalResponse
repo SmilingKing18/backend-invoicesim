@@ -1,14 +1,16 @@
 // src/models/FinalResponse.js
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-const FinalResponseSchema = new mongoose.Schema({
-  user:          { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  sessionId:     String,
-  countdownText: String ,
-  q1:            String ,
-  q2:            String ,
-  q3:            String ,
-  awards:        String,
+const FinalResponseSchema = new Schema({
+  user:          { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  sessionId:     { type: String },
+  countdownText: { type: String },
+  q1:            { type: String },
+  q2:            { type: String },
+  q3:            { type: String },
+  // store only the award keys earned as an array of strings
+  awards:        { type: [String], default: [] },
   createdAt:     { type: Date, default: Date.now }
 });
 
